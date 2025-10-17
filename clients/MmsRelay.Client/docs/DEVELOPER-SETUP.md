@@ -30,7 +30,7 @@ dotnet new console --dry-run
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/MmsRelay.git
+git clone https://github.com/jamocle/MmsRelay.git
 cd MmsRelay
 ```
 

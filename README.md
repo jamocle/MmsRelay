@@ -37,7 +37,7 @@
 ### Step 1: Get the Code
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/jamocle/MmsRelay.git
 cd MmsRelay
 ```
 

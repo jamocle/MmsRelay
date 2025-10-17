@@ -19,7 +19,7 @@
 ### 1. Clone and Build
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/jamocle/MmsRelay.git
 cd MmsRelay
 
 # Restore dependencies and build

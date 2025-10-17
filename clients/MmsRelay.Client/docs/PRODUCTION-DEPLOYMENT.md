@@ -440,7 +440,7 @@ stages:
             displayName: 'Build and push Docker image'
             inputs:
               containerRegistry: 'DockerHub'
-              repository: 'your-org/mmsrelay-client'
+              repository: 'jamocle/mmsrelay-client'
               command: 'buildAndPush'
               Dockerfile: '$(Pipeline.Workspace)/mmsrelay-client/Dockerfile'
               tags: |

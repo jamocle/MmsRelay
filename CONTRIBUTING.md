@@ -33,7 +33,7 @@ git --version
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/MmsRelay.git
+git clone https://github.com/jamocle/MmsRelay.git
 cd MmsRelay
 
 # Create a new branch for your changes

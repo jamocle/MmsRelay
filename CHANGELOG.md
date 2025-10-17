@@ -88,7 +88,7 @@ When your changes are merged, they appear in the "Unreleased" section above. Whe
 
 **Getting Notifications:**
 - Watch this repository on GitHub for release notifications
-- Subscribe to release RSS feed: `https://github.com/yourusername/MmsRelay/releases.atom`
+- Subscribe to release RSS feed: `https://github.com/jamocle/MmsRelay/releases.atom`
 
 ---
 
