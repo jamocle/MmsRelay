@@ -1,414 +1,588 @@
 # MmsRelay Console Client
 
-A professional command-line interface for the MmsRelay service, built with .NET 8 and following enterprise-grade patterns for reliability, testability, and maintainability.
+**What is this?** A simple command-line tool that lets you send text messages (SMS) and multimedia messages (MMS) from your computer's terminal or command prompt.
 
-## Quick Start
+**Perfect for:** Testing your MmsRelay service, sending automated notifications from scripts, system administration tasks, or quick one-off messages.
 
-### Installation
+## 🚀 5-Minute Quick Start
 
-Download the latest release for your platform or build from source:
+### What You Need
+
+- **.NET 8** installed on your computer ([download here](https://dotnet.microsoft.com/download))
+- **MmsRelay service** running somewhere (see main [README.md](../../README.md) for setup)
+- A **phone number** to send messages to (your own is perfect for testing!)
+
+### Step 1: Get the Console Client
 
 ```bash
-# Clone the repository
+# Get the code (if you don't have it already)
 git clone https://github.com/jamocle/MmsRelay.git
-cd MmsRelay
+cd MmsRelay/clients/MmsRelay.Client
 
-# Build the client
-dotnet build clients/MmsRelay.Client
-
-# Run the client
-cd clients/MmsRelay.Client
-dotnet run -- --help
+# Build the client (downloads dependencies)
+dotnet build
 ```
 
-### Basic Usage
+### Step 2: Send Your First Message
 
 ```bash
-# Send MMS with text message
-dotnet run -- send --to +15551234567 --body "Hello from MmsRelay!"
+# Send a simple text message (replace with your phone number)
+dotnet run -- send --to "+15551234567" --body "Hello from MmsRelay console!"
 
-# Send MMS with media attachment
-dotnet run -- send --to +15551234567 --media "https://example.com/image.jpg"
-
-# Send MMS with both text and media
-dotnet run -- send --to +15551234567 --body "Check this out!" --media "https://example.com/image.jpg"
-
-# Check service health
+# Check that your MmsRelay service is working  
 dotnet run -- health
-
-# Use custom service URL
-dotnet run -- send --to +15551234567 --body "Test" --service-url "https://api.mmsrelay.com"
-
-# Enable verbose logging
-dotnet run -- send --to +15551234567 --body "Test" --verbose
 ```
 
-## Features
-
-### 🚀 Enterprise-Grade Architecture
-- **Clean Architecture** with clear separation of concerns
-- **Dependency Injection** with Microsoft.Extensions.DependencyInjection
-- **SOLID Principles** throughout the codebase
-- **Async/await** for non-blocking operations
-
-### 🔄 Resilience Patterns
-- **Polly Integration** with timeout, retry, and circuit breaker policies
-- **Exponential Backoff** with jitter for retries
-- **Circuit Breaker** to prevent cascade failures
-- **Graceful Error Handling** with meaningful error messages
-
-### ✅ Comprehensive Validation
-- **FluentValidation** for command validation
-- **E.164 Phone Number** format validation
-- **URL Validation** for media attachments
-- **Business Rules** enforcement (body or media required)
-
-### 📊 Observability
-- **Structured Logging** with Serilog and JSON formatting
-- **Request/Response Correlation** for traceability
-- **Performance Metrics** and timing information
-- **Configurable Log Levels** (verbose mode support)
-
-### 🔧 Professional CLI
-- **System.CommandLine** for robust argument parsing
-- **Built-in Help** with detailed usage information
-- **Type-safe Options** with validation
-- **Hierarchical Commands** (send, health)
-
-### 🧪 Comprehensive Testing
-- **Unit Tests** with MSTest and FluentAssertions
-- **Integration Tests** with mocked HTTP responses
-- **Validation Tests** for all business rules
-- **Error Handling Tests** for resilience scenarios
-- **36 Total Tests** with 100% success rate
-
-## Command Reference
-
-### Global Options
-
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--help, -h` | Show help information | - |
-| `--version` | Show version information | - |
-
-### Send Command
-
-Send an MMS message through the MmsRelay service.
-
-```bash
-dotnet run -- send [options]
+**You should see:**
+```
+✅ Message sent successfully!
+Provider: twilio
+Message ID: SM1234567890abcdef
+Status: queued
 ```
 
-#### Options
-
-| Option | Required | Description | Example |
-|--------|----------|-------------|---------|
-| `--to, -t` | ✅ | Recipient phone number in E.164 format | `+15551234567` |
-| `--body, -b` | * | Message body text | `"Hello World!"` |
-| `--media, -m` | * | Comma-separated media URLs | `"https://example.com/image.jpg,https://example.com/video.mp4"` |
-| `--service-url, -s` | ❌ | MmsRelay service base URL | `https://api.mmsrelay.com` |
-| `--verbose, -v` | ❌ | Enable verbose logging | - |
-
-*Either `--body` or `--media` must be provided.
-
-#### Examples
+### Step 3: Try More Features
 
 ```bash
-# Text message
-dotnet run -- send --to +15551234567 --body "Meeting at 3pm today"
+# Send a message with an image
+dotnet run -- send --to "+15551234567" \
+  --body "Check out this image!" \
+  --media "https://httpbin.org/image/png"
 
-# Image attachment
-dotnet run -- send --to +15551234567 --media "https://example.com/chart.png"
+# Send to a different MmsRelay service
+dotnet run -- send --to "+15551234567" \
+  --body "Using production service" \
+  --service-url "https://api.yourdomain.com"
 
-# Text with multiple media
-dotnet run -- send --to +15551234567 \
-  --body "Project update" \
-  --media "https://example.com/doc.pdf,https://example.com/image.jpg"
-
-# Custom service URL with verbose output
-dotnet run -- send --to +15551234567 --body "Test" \
-  --service-url "https://staging.mmsrelay.com" \
+# Get detailed output for troubleshooting
+dotnet run -- send --to "+15551234567" \
+  --body "Debug message" \
   --verbose
 ```
 
-### Health Command
+## 📋 All Available Commands
 
-Check the health status of the MmsRelay service.
+### Send Messages
 
 ```bash
-dotnet run -- health [options]
+# Basic text message
+dotnet run -- send --to "+15551234567" --body "Your message here"
+
+# Text message with image  
+dotnet run -- send --to "+15551234567" \
+  --body "Look at this!" \
+  --media "https://example.com/image.jpg"
+
+# Multiple images (up to 10 for MMS)
+dotnet run -- send --to "+15551234567" \
+  --body "Multiple attachments" \
+  --media "https://example.com/image1.jpg" \
+  --media "https://example.com/image2.jpg" \
+  --media "https://example.com/document.pdf"
+
+# Just an image (no text)
+dotnet run -- send --to "+15551234567" \
+  --media "https://example.com/image.jpg"
 ```
 
-#### Options
-
-| Option | Required | Description | Default |
-|--------|----------|-------------|---------|
-| `--service-url, -s` | ❌ | MmsRelay service base URL | `http://localhost:8080` |
-| `--verbose, -v` | ❌ | Enable verbose logging | - |
-
-#### Examples
+### Check Service Health
 
 ```bash
-# Check localhost service
+# Quick health check
 dotnet run -- health
 
-# Check production service
-dotnet run -- health --service-url "https://api.mmsrelay.com"
-
-# Verbose health check with detailed output
-dotnet run -- health --verbose
+# Check a different service
+dotnet run -- health --service-url "https://api.yourdomain.com"
 ```
 
-## Configuration
-
-The client uses a layered configuration approach:
-
-1. **Command Line Arguments** (highest priority)
-2. **Environment Variables**
-3. **User Secrets** (development)
-4. **Configuration Files** (lowest priority)
-
-### Environment Variables
-
-Configure the client using environment variables:
+### Get Help
 
 ```bash
-# Service configuration
-export MMSRELAY__BASEURL="https://api.mmsrelay.com"
-export MMSRELAY__TIMEOUTSECONDS="30"
-export MMSRELAY__RETRYCOUNT="3"
+# See all available commands
+dotnet run -- --help
 
-# Logging configuration  
-export SERILOG__MINIMUMLEVEL__DEFAULT="Information"
+# Get help for a specific command
+dotnet run -- send --help
+dotnet run -- health --help
 ```
 
-### Configuration Files
+## 🛠️ Advanced Features
 
-#### appsettings.json
+### Phone Number Formats
+
+**✅ Correct (E.164 format):**
+- US: `+15551234567`
+- UK: `+442012345678` 
+- Canada: `+15551234567`
+- Germany: `+4930123456789`
+
+**❌ Incorrect:**
+- `555-123-4567` (missing country code and +)
+- `(555) 123-4567` (has parentheses)
+- `15551234567` (missing +)
+
+### Media File Types
+
+**Supported formats:**
+- **Images**: JPEG, PNG, GIF
+- **Documents**: PDF
+- **Videos**: MP4, MOV (small files only)
+
+**Requirements:**
+- Must be publicly accessible URLs (not local files)
+- Maximum 10 media attachments per message
+- Each file must be under 5MB
+- Total message size limit varies by carrier
+
+### Custom Service URLs
+
+```bash
+# Development server
+dotnet run -- send --to "+15551234567" --body "Dev test" \
+  --service-url "http://localhost:5000"
+
+# Staging environment  
+dotnet run -- send --to "+15551234567" --body "Staging test" \
+  --service-url "https://staging-api.yourdomain.com"
+
+# Production with HTTPS
+dotnet run -- send --to "+15551234567" --body "Production message" \
+  --service-url "https://api.yourdomain.com"
+```
+
+### Verbose Mode for Troubleshooting
+
+```bash
+# See detailed HTTP requests and responses
+dotnet run -- send --to "+15551234567" --body "Debug message" --verbose
+```
+
+**Verbose output includes:**
+- Full HTTP request details (URL, headers, body)
+- Complete HTTP response (status, headers, body)
+- Timing information
+- Error details if something goes wrong
+
+## 🔧 Building and Distribution
+### Create Standalone Executable (No .NET Required)
+
+**For Distribution:**
+```bash
+# Create a single file that works on any Windows computer (no .NET install needed)
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+
+# The result is a single .exe file you can copy anywhere
+# Located in: bin/Release/net8.0/win-x64/publish/MmsRelay.Client.exe
+
+# For Linux servers
+dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true
+
+# For Mac
+dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true
+```
+
+**Using the Standalone Executable:**
+```bash
+# Windows
+MmsRelay.Client.exe send --to "+15551234567" --body "Hello!"
+
+# Linux/Mac  
+./MmsRelay.Client send --to "+15551234567" --body "Hello!"
+```
+
+### Create Distribution Package
+
+```bash
+# Build everything and create a zip file for distribution
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+cd bin/Release/net8.0/win-x64/publish
+zip -r MmsRelay-Client-Windows.zip MmsRelay.Client.exe
+```
+
+## 🔧 Real-World Usage Examples
+
+### Automated Order Notifications
+
+```bash
+#!/bin/bash
+# Script: notify-customer.sh
+# Usage: ./notify-customer.sh "+15551234567" "12345" "shipped"
+
+CUSTOMER_PHONE=$1
+ORDER_NUMBER=$2  
+STATUS=$3
+
+dotnet run -- send \
+  --to "$CUSTOMER_PHONE" \
+  --body "Order #$ORDER_NUMBER status: $STATUS. Track at https://example.com/track/$ORDER_NUMBER" \
+  --service-url "https://api.yourdomain.com"
+```
+
+### System Health Monitoring
+
+```bash
+#!/bin/bash
+# Script: check-and-alert.sh
+# Checks service health and alerts if down
+
+if ! dotnet run -- health --service-url "https://api.yourdomain.com" > /dev/null 2>&1; then
+    echo "Service is down! Sending alert..."
+    dotnet run -- send \
+        --to "+15551234567" \
+        --body "ALERT: MmsRelay service is down at $(date)" \
+        --service-url "https://backup-service.yourdomain.com"
+fi
+```
+
+### Batch Message Sending
+
+```bash
+#!/bin/bash
+# Script: send-batch.sh
+# Send messages to multiple customers
+
+# Read phone numbers from file (one per line)
+while IFS= read -r phone_number; do
+    if [[ ! -z "$phone_number" ]]; then
+        echo "Sending to $phone_number..."
+        dotnet run -- send \
+            --to "$phone_number" \
+            --body "Weekly newsletter: Check out our latest updates!" \
+            --media "https://example.com/newsletter.jpg"
+        
+        # Wait 2 seconds to respect rate limits
+        sleep 2
+    fi
+done < customer_phones.txt
+```
+
+### Windows Task Scheduler Integration
+
+```batch
+@echo off
+REM Script: daily-reminder.bat
+REM Schedule this in Windows Task Scheduler for daily execution
+
+cd "C:\MmsRelay\clients\MmsRelay.Client"
+dotnet.exe run -- send --to "+15551234567" --body "Daily backup completed successfully at %DATE% %TIME%"
+
+if errorlevel 1 (
+    echo Failed to send notification
+    exit /b 1
+) else (
+    echo Notification sent successfully
+    exit /b 0
+)
+```
+
+## ⚙️ Configuration Options
+
+### Environment Variables (For Scripts)
+
+Set these to avoid repeating options:
+
+```bash
+# Windows Command Prompt
+set MMSRELAY__BASEURL=https://api.yourdomain.com
+set MMSRELAY__TIMEOUTSECONDS=60
+
+# Windows PowerShell
+$env:MMSRELAY__BASEURL = "https://api.yourdomain.com"
+$env:MMSRELAY__TIMEOUTSECONDS = "60"
+
+# Linux/Mac Bash
+export MMSRELAY__BASEURL="https://api.yourdomain.com"
+export MMSRELAY__TIMEOUTSECONDS=60
+
+# Then use without --service-url
+dotnet run -- send --to "+15551234567" --body "Uses environment variable URL"
+```
+
+### Configuration File (appsettings.json)
+
+Create `appsettings.json` in the client folder:
+
 ```json
 {
   "MmsRelay": {
-    "BaseUrl": "http://localhost:8080",
-    "TimeoutSeconds": 30,
-    "RetryCount": 3,
-    "CircuitBreakerThreshold": 5
+    "BaseUrl": "https://api.yourdomain.com",
+    "TimeoutSeconds": 30
   },
   "Serilog": {
     "MinimumLevel": {
-      "Default": "Information",
-      "Override": {
-        "Microsoft": "Warning"
-      }
+      "Default": "Information"
     }
   }
 }
 ```
 
-#### User Secrets (Development)
+## 🐛 Troubleshooting Common Problems
+
+### "Phone number must be in E.164 format"
+
+**Problem:** You get validation errors about phone number format.
+
+**Solution:** Always use the international format:
+- ✅ `+15551234567` (correct)
+- ❌ `555-123-4567` (missing country code)
+- ❌ `(555) 123-4567` (has formatting)
+
+### "Unable to connect to MmsRelay service"
+
+**Problem:** Can't reach the service.
+
+**Solutions:**
+1. **Check if service is running:**
+   ```bash
+   # Test if the service is up
+   curl http://localhost:5000/health/live
+   # Or
+   dotnet run -- health --service-url "http://localhost:5000"
+   ```
+
+2. **Check the URL:**
+   ```bash
+   # Try different URLs
+   dotnet run -- health --service-url "http://localhost:5000"
+   dotnet run -- health --service-url "http://localhost:8080"  
+   ```
+
+3. **Check your network:**
+   ```bash
+   ping yourdomain.com
+   ```
+
+### "HTTP 401 Unauthorized"
+
+**Problem:** Service returns authentication errors.
+
+**Solution:** Check your MmsRelay service configuration - it might need API keys or have authentication enabled.
+
+### Media Files Not Working
+
+**Problem:** Images or attachments don't send.
+
+**Common Issues:**
+- ❌ Local file paths: `file:///C:/image.jpg` (won't work)
+- ✅ Public URLs: `https://example.com/image.jpg` (works)
+- ❌ Private URLs that require login (won't work)
+- ❌ Files too large (>5MB per file)
+
+**Test your media URLs:**
 ```bash
-dotnet user-secrets set "MmsRelay:BaseUrl" "http://localhost:8080"
-dotnet user-secrets set "MmsRelay:ApiKey" "dev-api-key"
+# Can you access it in a browser? 
+curl -I https://example.com/image.jpg
+# Should return HTTP 200 OK
 ```
 
-## Error Handling
+### Verbose Mode for Debugging
 
-The client provides comprehensive error handling with actionable messages:
-
-### Validation Errors
+**See exactly what's happening:**
 ```bash
-$ dotnet run -- send --to "invalid" --body "test"
-Error: Phone number must be in E.164 format (e.g., +15551234567)
+dotnet run -- send --to "+15551234567" --body "Debug test" --verbose
 ```
 
-### Service Errors
-```bash
-$ dotnet run -- send --to +15551234567 --body "test"
-Error: MmsRelay service returned an error (HTTP 400): Invalid request format
-```
+**Output shows:**
+- Exact HTTP request sent
+- Full HTTP response received  
+- Timing information
+- Any retry attempts
 
-### Network Errors
-```bash
-$ dotnet run -- health --service-url "https://invalid-url.com"
-Error: Unable to connect to MmsRelay service. Please check the service URL and network connectivity.
-```
+## 🚀 Advanced Integration Examples
 
-## Development
+### GitHub Actions (CI/CD)
 
-### Prerequisites
-- .NET 8 SDK
-- Visual Studio 2022 or VS Code
-
-### Building from Source
-```bash
-# Clone repository
-git clone https://github.com/jamocle/MmsRelay.git
-cd MmsRelay
-
-# Restore dependencies
-dotnet restore
-
-# Build solution
-dotnet build
-
-# Run tests
-dotnet test
-
-# Run client
-cd clients/MmsRelay.Client
-dotnet run -- --help
-```
-
-### Testing
-```bash
-# Run all client tests
-dotnet test tests/MmsRelay.Client.Tests
-
-# Run with coverage
-dotnet test --collect:"XPlat Code Coverage"
-
-# Run specific test category
-dotnet test --filter "Category=Unit"
-```
-
-## Deployment
-
-### Self-Contained Executable
-
-Create a standalone executable:
-
-```bash
-# Windows
-dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
-
-# Linux
-dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true
-
-# macOS
-dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true
-```
-
-### Docker Container
-
-```bash
-# Build image
-docker build -t mmsrelay-client -f clients/MmsRelay.Client/Dockerfile .
-
-# Run container
-docker run --rm mmsrelay-client --help
-
-# Run with environment variables
-docker run --rm \
-  -e MMSRELAY__BASEURL="https://api.mmsrelay.com" \
-  mmsrelay-client send --to +15551234567 --body "Hello from Docker!"
-```
-
-## Integration Examples
-
-### CI/CD Pipeline
-
+**Notify team when deployment completes:**
 ```yaml
-# GitHub Actions example
-- name: Send deployment notification
-  run: |
-    ./mmsrelay-client send \
-      --to "+15551234567" \
-      --body "Deployment completed successfully for ${{ github.ref }}" \
-      --service-url "${{ secrets.MMSRELAY_URL }}"
-  env:
-    MMSRELAY__APIKEY: ${{ secrets.MMSRELAY_API_KEY }}
+# .github/workflows/deploy.yml
+name: Deploy and Notify
+
+on: 
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy application
+      run: |
+        # Your deployment commands here
+        echo "Deploying application..."
+        
+    - name: Notify team of successful deployment
+      if: success()
+      run: |
+        ./MmsRelay.Client send \
+          --to "${{ secrets.TEAM_PHONE }}" \
+          --body "✅ Deployment successful for commit ${{ github.sha }}" \
+          --service-url "${{ secrets.MMSRELAY_URL }}"
+          
+    - name: Notify team of failed deployment  
+      if: failure()
+      run: |
+        ./MmsRelay.Client send \
+          --to "${{ secrets.TEAM_PHONE }}" \
+          --body "❌ Deployment FAILED for commit ${{ github.sha }}" \
+          --service-url "${{ secrets.MMSRELAY_URL }}"
 ```
 
-### Monitoring Script
+### PowerShell Script (Windows Automation)
 
+**Monitor disk space and alert:**
+```powershell
+# Script: DiskSpaceMonitor.ps1
+param(
+    [string]$AlertPhone = "+15551234567",
+    [int]$ThresholdPercent = 80
+)
+
+$drives = Get-WmiObject -Class Win32_LogicalDisk | Where-Object {$_.DriveType -eq 3}
+
+foreach ($drive in $drives) {
+    $freePercent = ($drive.FreeSpace / $drive.Size) * 100
+    $usedPercent = 100 - $freePercent
+    
+    if ($usedPercent -gt $ThresholdPercent) {
+        $message = "⚠️ DISK ALERT: Drive $($drive.DeviceID) is $([math]::Round($usedPercent, 1))% full on $env:COMPUTERNAME"
+        
+        & dotnet run -- send --to $AlertPhone --body $message
+        Write-Host "Alert sent for drive $($drive.DeviceID)"
+    }
+}
+```
+
+### Linux Cron Job (Scheduled Messages)
+
+```bash
+# Add to crontab: crontab -e
+# Send daily backup reminder at 2 AM
+0 2 * * * cd /opt/mmsrelay && ./MmsRelay.Client send --to "+15551234567" --body "Daily backup starting on $(hostname)"
+
+# Send weekly report on Mondays at 9 AM
+0 9 * * 1 cd /opt/mmsrelay && ./MmsRelay.Client send --to "+15551234567" --body "Weekly server report: All systems operational"
+```
+
+### Docker Integration
+
+**Dockerfile for containerized usage:**
+```dockerfile
+FROM mcr.microsoft.com/dotnet/runtime:8.0
+WORKDIR /app
+COPY bin/Release/net8.0/publish/ .
+
+ENTRYPOINT ["./MmsRelay.Client"]
+CMD ["--help"]
+```
+
+**Use in Docker Compose:**
+```yaml
+# docker-compose.yml
+version: '3.8'
+services:
+  notification-sender:
+    build: .
+    environment:
+      - MMSRELAY__BASEURL=https://api.yourdomain.com
+    command: ["send", "--to", "+15551234567", "--body", "Service started"]
+```
+
+## 🎯 Performance Tips & Best Practices
+
+### For High-Volume Usage
+
+**Batch Processing with Rate Limiting:**
 ```bash
 #!/bin/bash
-# Health check script for monitoring
+# Send to 100 customers with 2-second delays (respects Twilio rate limits)
 
-if ./mmsrelay-client health --service-url "https://api.mmsrelay.com"; then
-    echo "Service is healthy"
-    exit 0
-else
-    echo "Service is down, sending alert..."
-    ./mmsrelay-client send \
-        --to "+15551234567" \
-        --body "ALERT: MmsRelay service is down" \
-        --service-url "https://backup.mmsrelay.com"
-    exit 1
-fi
+while IFS=, read -r phone message; do
+    echo "Sending to $phone..."
+    dotnet run -- send --to "$phone" --body "$message"
+    
+    # Wait 2 seconds between messages (30 messages/minute max)
+    sleep 2
+done < customer_list.csv
 ```
 
-## Performance
+### Memory and CPU Optimization
 
-### Benchmarks
+**Long-running Service Pattern:**
+```csharp
+// For applications that send many messages, consider hosting
+// the client as a background service instead of spawning processes
 
-| Operation | Duration | Memory |
-|-----------|----------|--------|
-| Send MMS (text) | ~250ms | ~15MB |
-| Send MMS (media) | ~400ms | ~18MB |
-| Health Check | ~100ms | ~12MB |
-| Cold Start | ~800ms | ~25MB |
+// Program.cs - Host as a background service
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices(services =>
+    {
+        services.AddHostedService<MessageSendingService>();
+    })
+    .Build();
 
-### Optimization Tips
+await host.RunAsync();
+```
 
-1. **Reuse Client**: Use as a long-running service for multiple operations
-2. **Connection Pooling**: Automatic HTTP connection reuse
-3. **Async Operations**: Non-blocking I/O for better throughput
-4. **Resource Cleanup**: Automatic disposal of resources
+### Error Recovery Strategies
 
-## Troubleshooting
-
-### Common Issues
-
-#### Phone Number Format
-- **Problem**: "Invalid phone number format"
-- **Solution**: Use E.164 format (e.g., `+15551234567`)
-
-#### Network Connectivity
-- **Problem**: "Connection refused" or timeout errors
-- **Solution**: Check service URL, firewall, and network connectivity
-
-#### Configuration Issues
-- **Problem**: "Configuration value not found"
-- **Solution**: Verify environment variables or configuration files
-
-### Debug Mode
-
-Enable verbose logging for troubleshooting:
-
+**Robust Retry Script:**
 ```bash
-dotnet run -- send --to +15551234567 --body "debug test" --verbose
+#!/bin/bash
+# retry-send.sh - Retry failed messages with exponential backoff
+
+send_with_retry() {
+    local phone=$1
+    local message=$2
+    local max_attempts=3
+    local delay=1
+    
+    for ((i=1; i<=max_attempts; i++)); do
+        if dotnet run -- send --to "$phone" --body "$message"; then
+            echo "✅ Message sent successfully to $phone"
+            return 0
+        else
+            echo "❌ Attempt $i failed, waiting ${delay}s..."
+            sleep $delay
+            delay=$((delay * 2))  # Exponential backoff
+        fi
+    done
+    
+    echo "🚫 Failed to send to $phone after $max_attempts attempts"
+    return 1
+}
+
+# Usage
+send_with_retry "+15551234567" "Important notification"
 ```
 
-This outputs detailed information including:
-- HTTP request/response details
-- Retry attempts and timing
-- Configuration values used
-- Performance metrics
+## 📚 Additional Resources
 
-## Documentation
+### Documentation Links
+- **[Main README](../../README.md)** - MmsRelay service setup and overview
+- **[FAQ](../../FAQ.md)** - Common questions and answers  
+- **[Examples](../../EXAMPLES.md)** - Real-world usage scenarios
+- **[Troubleshooting](../../TROUBLESHOOTING.md)** - Problem solving guide
+- **[Contributing](../../CONTRIBUTING.md)** - How to contribute to the project
 
-For comprehensive documentation, see:
+### Getting Help
 
-- 📖 **[Knowledge Base](docs/KNOWLEDGE.md)** - Architecture, patterns, and best practices
-- 🛠️ **[Developer Setup](docs/DEVELOPER-SETUP.md)** - Development environment and workflow
-- 🚀 **[Production Deployment](docs/PRODUCTION-DEPLOYMENT.md)** - Deployment strategies and operations
+**Before asking for help, try:**
+1. Check the [Troubleshooting](#-troubleshooting-common-problems) section above
+2. Enable `--verbose` mode to see detailed error information
+3. Test with the `health` command to verify service connectivity
+4. Check that phone numbers are in correct E.164 format
 
-## Support
+**Where to get help:**
+- � **GitHub Issues** - Bug reports and feature requests
+- � **GitHub Discussions** - General questions and community help  
+- � **Documentation** - Comprehensive guides and examples
 
-For issues and support:
-- 🐛 Report bugs via GitHub Issues
-- 💬 Join the community discussions
-- 📧 Contact the development team
-- 📚 Check the documentation above
+**When reporting issues, include:**
+- Operating system and .NET version
+- Complete command you ran and error message
+- Output from `--verbose` mode
+- Whether the `health` command works
 
-## License
+---
 
-This project is licensed under the MIT License - see the [LICENSE](../../LICENSE) file for details.
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](../../CONTRIBUTING.md) for details on:
-- Code of Conduct
-- Development setup
-- Pull request process
-- Coding standards
+**Ready to start sending messages?** 🚀 Go back to the [Quick Start](#-5-minute-quick-start) section and send your first message!
