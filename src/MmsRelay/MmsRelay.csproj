@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>MmsRelay</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AssemblyName>MmsRelay</AssemblyName>
+    <UserSecretsId>3f2a8526-3d3c-49c5-8d27-aef00b23275b</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.1" />
+    <PackageReference Include="Polly.Core" Version="8.3.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+    <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
+  </ItemGroup>
+</Project>
