@@ -20,7 +20,8 @@ public sealed class SendMmsRequestValidator : AbstractValidator<SendMmsRequest>
         // Use Array.Empty<Uri>() which is allowed inside the expression tree.
         RuleForEach(x => x.MediaUrls ?? Array.Empty<Uri>())
             .Must(uri => uri.Scheme is "http" or "https")
-            .WithMessage("MediaUrls must be HTTP/HTTPS.");
+            .WithMessage("MediaUrls must be HTTP/HTTPS.")
+            .OverridePropertyName("MediaUrls");
 
         // Require either Body or MediaUrls
         RuleFor(x => x)
